@@ -7,6 +7,9 @@
     "build": "npx webpack --mode production",
     "start": "webpack-dev-server --mode development --open"
   },
+  "resolutions": {
+    "styled-components": "^5"
+  },
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@babel/polyfill": "^7.12.1",
@@ -23,11 +26,13 @@
   },
   "dependencies": {
     "antd": "^4.16.13",
+    "axios": "^0.24.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
     "redux-devtools-extension": "^2.13.9",
-    "redux-thunk": "^2.4.0"
+    "redux-thunk": "^2.4.0",
+    "styled-components": "^5.3.3"
   }
 }

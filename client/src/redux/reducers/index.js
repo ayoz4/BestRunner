@@ -1,3 +1,7 @@
 import { combineReducers } from "redux";
 
-export default combineReducers({});
+import workouts from "./workouts";
+
+export default combineReducers({
+  workouts,
+});
