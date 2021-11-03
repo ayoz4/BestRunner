@@ -1,13 +1,33 @@
-import { GET_WORKOUTS_REQUEST, GET_WORKOUTS_SUCCESS } from "../consts";
+import {
+  GET_WORKOUTS_REQUEST,
+  GET_WORKOUTS_SUCCESS,
+  POST_WORKOUT_REQUEST,
+} from "../consts";
 
-const workouts = (state = [], { type, data }) => {
+const workoutDefaultState = {
+  isFetching: false,
+  isFetched: false,
+  data: [],
+  error: null,
+};
+
+const workouts = (state = workoutDefaultState, { type, data }) => {
   switch (type) {
     case GET_WORKOUTS_REQUEST:
-      return state;
+      return {
+        ...workoutDefaultState,
+        isFetching: true,
+      };
+    case POST_WORKOUT_REQUEST:
+      return {
+        ...workoutDefaultState,
+        isFetching: true,
+      };
     case GET_WORKOUTS_SUCCESS:
       return {
         ...state,
-        data,
+        isFetching: false,
+        data: data,
       };
     default:
       return state;

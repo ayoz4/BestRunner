@@ -4,6 +4,7 @@ import {
   GET_WORKOUTS_FAILURE,
   GET_WORKOUTS_REQUEST,
   GET_WORKOUTS_SUCCESS,
+  POST_WORKOUT_REQUEST,
 } from "../consts";
 
 export const getWorkouts = () => async (dispatch) => {
@@ -21,6 +22,30 @@ export const getWorkouts = () => async (dispatch) => {
 export const deleteWorkout = (id) => async (dispatch) => {
   try {
     await axios.delete(API + `workouts/${id}`);
+
+    return dispatch(getWorkouts());
+  } catch (error) {
+    console.log(error.response);
+  }
+};
+
+export const createWorkout = (workout) => async (dispatch) => {
+  try {
+    dispatch({ type: POST_WORKOUT_REQUEST });
+
+    setTimeout(() => {}, 3000);
+
+    await axios.post(API + "workouts", workout);
+
+    return dispatch(getWorkouts());
+  } catch (error) {
+    console.log(error.response);
+  }
+};
+
+export const editWorkout = (workout) => async (dispatch) => {
+  try {
+    await axios.put(API + `workouts/${workout.id}`, workout);
 
     return dispatch(getWorkouts());
   } catch (error) {
