@@ -41,17 +41,7 @@ function TableWorkout({ data, deleteRow }) {
         <Button type="primary">Добавить тренировку</Button>
       </WorkoutModal>
 
-      <Table
-        columns={columns}
-        dataSource={data.data}
-        onRow={(record, rowIndex) => {
-          return {
-            onClick: (e) => {
-              console.log(e.target);
-            },
-          };
-        }}
-      />
+      <Table columns={columns} dataSource={data.data} rowKey="id" />
     </div>
   );
 }
