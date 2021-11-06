@@ -11,6 +11,10 @@ app.use(bodyParser.json());
 
 app.use("/workouts", workouts);
 
+app.get("/", (req, res) => {
+    res.send("Express is working")
+})
+
 const port = process.env.PORT || 8080;
 
 app.listen(port);
