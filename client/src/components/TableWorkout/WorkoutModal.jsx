@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import Modal from "antd/lib/modal";
-import { Form, Input, Select } from "antd";
+import { Form, Input, Select, message } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import isEmpty from "lodash/isEmpty";
+
+import { workoutTypes } from "./consts";
 
 const { Option } = Select;
 
 function WorkoutModal({ children, workout, action }) {
   const dispatch = useDispatch();
 
-  const workouts = useSelector((state) => state.workouts);
-
   const [isVisible, setIsVisible] = useState(false);
+  const [postStatus, setPostStatus] = useState(false);
 
   const [form] = Form.useForm();
 
@@ -23,51 +24,61 @@ function WorkoutModal({ children, workout, action }) {
 
   const closeModal = () => {
     form.resetFields();
+    formik.resetForm();
     setIsVisible(false);
   };
 
   const formik = useFormik({
     initialValues: workout || {
-      distance: null,
+      distance: "",
       date: new Date().toISOString().substring(0, 10),
-      type: null,
+      type: "",
       comment: "",
     },
 
     validationSchema: Yup.object().shape({
-      distance: Yup.number().min(1).max(100).required(),
-      date: Yup.date().required(),
+      distance: Yup.number()
+        .min(0)
+        .max(300)
+        .required("Необходимо внести дистанцию в км"),
+      date: Yup.date().required().nullable(),
       type: Yup.string()
-        .oneOf(["run", "cycling", "skiing", "jogging"])
-        .required(),
+        .oneOf(workoutTypes)
+        .required("Необходимо указать тип активности"),
       comment: Yup.string(),
     }),
 
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       try {
-        dispatch(action(values));
+        await dispatch(action(values));
+
+        message.success({ content: "Успешно!" });
+        setPostStatus(false);
+        closeModal();
       } catch (error) {
-        console.log(error);
+        setPostStatus(false);
+        message.error({ content: error });
       }
     },
   });
 
-  const handleSubmitWorkout = () => {
-    formik
-      .validateForm()
-      .then((values) => {
-        if (!isEmpty(values)) {
-          form.validateFields();
-          throw values;
-        }
+  const handleSubmitWorkout = async () => {
+    try {
+      setPostStatus(true);
 
-        formik.handleSubmit();
-        form.resetFields();
-        closeModal();
-      })
-      .catch((info) => {
-        console.log(info);
-      });
+      const values = await formik.validateForm();
+
+      if (!isEmpty(values)) {
+        console.log("validating");
+        form.validateFields()
+        throw values;
+      }
+
+      await formik.handleSubmit();
+    } catch (error) {
+      setPostStatus(false);
+      message.error("Ошибка добавления тренировки");
+    }
   };
 
   return (
@@ -77,13 +88,14 @@ function WorkoutModal({ children, workout, action }) {
         visible={isVisible}
         onCancel={closeModal}
         onOk={handleSubmitWorkout}
-        confirmLoading={workouts.isFetching}
+        confirmLoading={postStatus}
       >
         <Form layout="vertical" form={form}>
           <Form.Item
             label="Дистанция"
-            rules={[{ required: true, message: formik.errors.distance }]}
             required={true}
+            validateStatus={formik.errors.distance ? "error" : "success"}
+            help={formik.errors.distance}
           >
             <Input
               type="number"
@@ -96,8 +108,9 @@ function WorkoutModal({ children, workout, action }) {
 
           <Form.Item
             label="Дата"
-            rules={[{ required: true, message: formik.errors.date }]}
             required={true}
+            validateStatus={formik.errors.date ? "error" : "success"}
+            help={formik.errors.date}
           >
             <Input
               type="date"
@@ -109,8 +122,9 @@ function WorkoutModal({ children, workout, action }) {
 
           <Form.Item
             label="Тип тренировки"
-            rules={[{ required: true, message: formik.errors.type }]}
             required={true}
+            validateStatus={formik.errors.type ? "error" : "success"}
+            help={formik.errors.type}
           >
             <Select
               value={formik.values.type}
@@ -127,11 +141,10 @@ function WorkoutModal({ children, workout, action }) {
             </Select>
           </Form.Item>
 
-          <Form.Item label="Комментарий">
+          <Form.Item label="Комментарий" name="comment">
             <Input.TextArea
               type="text"
               placeholder="Впишите комментарий"
-              name="comment"
               value={formik.values.comment}
               onChange={formik.handleChange}
             />

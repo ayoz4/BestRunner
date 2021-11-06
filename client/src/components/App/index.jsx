@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getWorkouts, deleteWorkout } from "../../redux/actions/workoutActions";
 
 import TableWorkout from "../TableWorkout";
+import { AppWrapper } from "./styles";
 
 function App() {
   const dispatch = useDispatch();
@@ -24,9 +25,9 @@ function App() {
   };
 
   return (
-    <div>
+    <AppWrapper>
       <TableWorkout data={workouts} deleteRow={removeWorkout} />
-    </div>
+    </AppWrapper>
   );
 }
 

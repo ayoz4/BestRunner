@@ -39,7 +39,7 @@ export const createWorkout = (workout) => async (dispatch) => {
 
     return dispatch(getWorkouts());
   } catch (error) {
-    console.log(error.response);
+    throw error.message;
   }
 };
 
