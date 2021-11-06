@@ -1,4 +1,3 @@
-// const express = require("express");
 import bodyParser from "body-parser";
 import express from "express";
 import cors from "cors";
@@ -12,4 +11,6 @@ app.use(bodyParser.json());
 
 app.use("/workouts", workouts);
 
-app.listen(8080);
+const port = process.env.PORT || 8080;
+
+app.listen(port);
