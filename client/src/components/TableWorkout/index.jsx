@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Table from "antd/es/table";
 import Button from "antd/es/button";
 import message from "antd/es/message";
+import * as Scroll from "react-scroll";
 
 import { translations } from "../utils/translations";
 import { createWeeksFromDates } from "../utils/chartData";
@@ -69,6 +70,7 @@ function TableWorkout({ data, deleteRow }) {
     }
 
     setChartVisible(!isChartVisible);
+    Scroll.animateScroll.scrollToBottom();
   };
 
   return (

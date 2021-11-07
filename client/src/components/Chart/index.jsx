@@ -4,7 +4,7 @@ import { ChartWrapper } from "./styles";
 
 function Chart({ dataset }) {
   return (
-    <ChartWrapper>
+    <ChartWrapper id="chart">
       <Bar
         data={{
           labels: [...dataset.keys()].map((_, index) => `Неделя ${index + 1}`),
