@@ -1,7 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 const isDev = process.env.NODE_ENV === "development";
 const isProd = !isDev;
@@ -30,10 +29,6 @@ const plugins = () => {
     }),
     new CleanWebpackPlugin(),
   ];
-
-  if (isProd) {
-    base.push(new BundleAnalyzerPlugin());
-  }
 
   return base;
 };
