@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import Modal from "antd/lib/modal";
-import { Form, Input, Select, message } from "antd";
+import Form from "antd/es/form";
+import Input from "antd/es/input";
+import Select from "antd/es/select";
+import message from "antd/es/message";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
@@ -70,7 +73,7 @@ function WorkoutModal({ children, workout, action }) {
 
       if (!isEmpty(values)) {
         console.log("validating");
-        form.validateFields()
+        form.validateFields();
         throw values;
       }
 

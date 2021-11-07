@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Table from "antd/lib/table/Table";
-import Button from "antd/lib/button";
-import message from "antd/lib/message";
+import Table from "antd/es/table";
+import Button from "antd/es/button";
+import message from "antd/es/message";
 
 import { translations } from "../utils/translations";
 import { createWeeksFromDates } from "../utils/chartData";

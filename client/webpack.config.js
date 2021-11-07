@@ -1,9 +1,42 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 const isDev = process.env.NODE_ENV === "development";
 const isProd = !isDev;
+
+const jsLoaders = () => {
+  const laoders = [
+    {
+      loader: "babel-loader",
+    },
+  ];
+
+  if (isDev) {
+    laoders.push("eslint-loader");
+  }
+
+  return laoders;
+};
+
+const plugins = () => {
+  const base = [
+    new HtmlWebpackPlugin({
+      template: "./index.html",
+      minify: {
+        collapseWhitespace: isProd,
+      },
+    }),
+    new CleanWebpackPlugin(),
+  ];
+
+  if (isProd) {
+    base.push(new BundleAnalyzerPlugin());
+  }
+
+  return base;
+};
 
 module.exports = {
   context: path.resolve(__dirname, "src"),
@@ -20,20 +53,15 @@ module.exports = {
   },
   devServer: {
     port: 3000,
-    hot: true,
+    hot: isDev,
   },
-  plugins: [
-    new HtmlWebpackPlugin({ template: "./index.html" }),
-    new CleanWebpackPlugin(),
-  ],
+  plugins: plugins(),
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-        },
+        use: jsLoaders(),
       },
       {
         test: /\.jsx$/,
