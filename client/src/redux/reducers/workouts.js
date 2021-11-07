@@ -2,7 +2,6 @@ import {
   GET_WORKOUTS_FAILURE,
   GET_WORKOUTS_REQUEST,
   GET_WORKOUTS_SUCCESS,
-  POST_WORKOUT_REQUEST,
 } from "../consts";
 
 const workoutDefaultState = {
@@ -19,11 +18,6 @@ const workouts = (state = workoutDefaultState, { type, data }) => {
         ...workoutDefaultState,
         isFetching: true,
       };
-    // case POST_WORKOUT_REQUEST:
-    //   return {
-    //     ...workoutDefaultState,
-    //     isFetching: true,
-    //   };
     case GET_WORKOUTS_SUCCESS:
       return {
         ...state,

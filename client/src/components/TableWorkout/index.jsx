@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Table from "antd/lib/table/Table";
 import Button from "antd/lib/button";
-import message from 'antd/lib/message'
+import message from "antd/lib/message";
 
 import { translations } from "../utils/translations";
 import { createWeeksFromDates } from "../utils/chartData";
@@ -9,7 +9,12 @@ import { createWorkout, editWorkout } from "../../redux/actions/workoutActions";
 import WorkoutModal from "./WorkoutModal";
 import { workoutTypes } from "./consts";
 import Chart from "../Chart";
-import { ButtonWrapper, OperationsWrapper, TableWorkoutWrapper, Title } from "./styles";
+import {
+  ButtonWrapper,
+  OperationsWrapper,
+  TableWorkoutWrapper,
+  Title,
+} from "./styles";
 
 function TableWorkout({ data, deleteRow }) {
   const [dataset, setDataSet] = useState(createWeeksFromDates(data.data));
@@ -63,8 +68,8 @@ function TableWorkout({ data, deleteRow }) {
       return;
     }
 
-    setChartVisible(!isChartVisible)
-  }
+    setChartVisible(!isChartVisible);
+  };
 
   return (
     <TableWorkoutWrapper>
@@ -74,9 +79,7 @@ function TableWorkout({ data, deleteRow }) {
         <WorkoutModal action={createWorkout}>
           <Button type="primary">Добавить тренировку</Button>
         </WorkoutModal>
-        <Button onClick={openChart}>
-          Открыть график
-        </Button>
+        <Button onClick={openChart}>Открыть график</Button>
       </ButtonWrapper>
 
       <Table
@@ -85,6 +88,7 @@ function TableWorkout({ data, deleteRow }) {
         rowKey="id"
         pagination={false}
         bordered={true}
+        loading={data.isFetching}
       />
 
       {isChartVisible && <Chart dataset={dataset} />}

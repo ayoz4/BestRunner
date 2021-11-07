@@ -4,7 +4,6 @@ import {
   GET_WORKOUTS_FAILURE,
   GET_WORKOUTS_REQUEST,
   GET_WORKOUTS_SUCCESS,
-  POST_WORKOUT_REQUEST,
 } from "../consts";
 
 export const getWorkouts = () => async (dispatch) => {
@@ -31,8 +30,6 @@ export const deleteWorkout = (id) => async (dispatch) => {
 
 export const createWorkout = (workout) => async (dispatch) => {
   try {
-    dispatch({ type: POST_WORKOUT_REQUEST });
-
     setTimeout(() => {}, 3000);
 
     await axios.post(API + "workouts", workout);
