@@ -3,16 +3,17 @@ import {
   GET_WORKOUTS_REQUEST,
   GET_WORKOUTS_SUCCESS,
 } from "../consts";
+import { WorkoutActions, WorkoutState } from "../types";
 
-const workoutDefaultState = {
+const workoutDefaultState: WorkoutState = {
   isFetching: false,
   isFetched: false,
   data: [],
   error: null,
 };
 
-const workouts = (state = workoutDefaultState, { type, data }) => {
-  switch (type) {
+const workouts = (state = workoutDefaultState, action: WorkoutActions) => {
+  switch (action.type) {
     case GET_WORKOUTS_REQUEST:
       return {
         ...workoutDefaultState,
@@ -22,15 +23,15 @@ const workouts = (state = workoutDefaultState, { type, data }) => {
       return {
         ...state,
         isFetching: false,
-        data: data,
+        data: action.data,
       };
     case GET_WORKOUTS_FAILURE:
       return {
         ...state,
         isFetching: false,
         isFetched: false,
-        error: data
-      }  
+        error: action.error,
+      };
     default:
       return state;
   }

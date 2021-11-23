@@ -10,10 +10,17 @@ import { useDispatch } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 
 import { workoutTypes } from "./consts";
+import { Workout } from "../../redux/types";
 
 const { Option } = Select;
 
-function WorkoutModal({ children, workout, action }) {
+type WorkoutModalProps = {
+  children: React.ReactNode;
+  workout?: Workout;
+  action: (workout: Workout) => void;
+};
+
+function WorkoutModal({ children, workout, action }: WorkoutModalProps) {
   const dispatch = useDispatch();
 
   const [isVisible, setIsVisible] = useState(false);
@@ -33,7 +40,7 @@ function WorkoutModal({ children, workout, action }) {
 
   const formik = useFormik({
     initialValues: workout || {
-      distance: "",
+      distance: 0,
       date: new Date().toISOString().substring(0, 10),
       type: "",
       comment: "",
@@ -134,7 +141,6 @@ function WorkoutModal({ children, workout, action }) {
               onChange={(e) =>
                 formik.handleChange({ target: { name: "type", value: e } })
               }
-              name="type"
               placeholder="Выберите тип тренировки"
             >
               <Option value="run">Бег</Option>
@@ -146,7 +152,6 @@ function WorkoutModal({ children, workout, action }) {
 
           <Form.Item label="Комментарий" name="comment">
             <Input.TextArea
-              type="text"
               placeholder="Впишите комментарий"
               value={formik.values.comment}
               onChange={formik.handleChange}

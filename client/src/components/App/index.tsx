@@ -20,7 +20,7 @@ function App() {
     fetchWorkouts();
   }, []);
 
-  const removeWorkout = (id) => {
+  const removeWorkout = (id: number) => {
     dispatch(deleteWorkout(id));
   };
 

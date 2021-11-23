@@ -16,8 +16,14 @@ import {
   TableWorkoutWrapper,
   Title,
 } from "./styles";
+import { Workout, WorkoutState } from "../../redux/types";
 
-function TableWorkout({ data, deleteRow }) {
+type TableWorkoutProps = {
+  data: WorkoutState;
+  deleteRow: (id: number | string) => void;
+};
+
+function TableWorkout({ data, deleteRow }: TableWorkoutProps) {
   const [dataset, setDataSet] = useState(createWeeksFromDates(data.data));
   const [isChartVisible, setChartVisible] = useState(false);
 
@@ -29,12 +35,14 @@ function TableWorkout({ data, deleteRow }) {
     {
       title: "Дистанция",
       dataIndex: "distance",
-      sorter: (a, b) => a.distance - b.distance,
+      sorter: (a: Workout, b: Workout) => a.distance - b.distance,
     },
     {
       title: "Дата",
       dataIndex: "date",
-      sorter: (a, b) => new Date(a.date) - new Date(b.date),
+      sorter: (a: Workout, b: Workout) =>
+        Number.parseFloat(new Date(a.date).toString()) -
+        Number.parseFloat(new Date(b.date).toString()),
     },
     {
       title: "Тип",
@@ -43,8 +51,8 @@ function TableWorkout({ data, deleteRow }) {
         text: translations[value],
         value: value,
       })),
-      onFilter: (value, record) => record.type === value,
-      render: (text) => translations[text],
+      onFilter: (value: string, record: Workout) => record.type === value,
+      render: (text: string) => translations[text],
     },
     {
       title: "Комментарий",
@@ -52,7 +60,7 @@ function TableWorkout({ data, deleteRow }) {
     },
     {
       title: "Операция",
-      render: (_, record) => (
+      render: (_: string, record: Workout) => (
         <OperationsWrapper>
           <WorkoutModal workout={record} action={editWorkout}>
             <a>Редактировать</a>
