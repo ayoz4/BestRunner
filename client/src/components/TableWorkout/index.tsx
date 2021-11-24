@@ -24,7 +24,9 @@ type TableWorkoutProps = {
 };
 
 function TableWorkout({ data, deleteRow }: TableWorkoutProps) {
-  const [dataset, setDataSet] = useState(createWeeksFromDates(data.data));
+  const [dataset, setDataSet] = useState<Map<number, number>>(
+    createWeeksFromDates(data.data)
+  );
   const [isChartVisible, setChartVisible] = useState(false);
 
   useEffect(() => {
@@ -40,14 +42,12 @@ function TableWorkout({ data, deleteRow }: TableWorkoutProps) {
     {
       title: "Дата",
       dataIndex: "date",
-      sorter: (a: Workout, b: Workout) =>
-        Number.parseFloat(new Date(a.date).toString()) -
-        Number.parseFloat(new Date(b.date).toString()),
+      sorter: (a: Workout, b: Workout) => +new Date(a.date) - +new Date(b.date),
     },
     {
       title: "Тип",
       dataIndex: "type",
-      filters: workoutTypes.map((value) => ({
+      filters: workoutTypes.map((value: string) => ({
         text: translations[value],
         value: value,
       })),

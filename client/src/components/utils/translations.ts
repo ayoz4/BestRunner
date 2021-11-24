@@ -1,13 +1,10 @@
 type TranslationsTypes = {
-  run: string;
-  cycling: string;
-  skiing: string;
-  jogging: string;
-}
+  [activity: string]: string;
+};
 
 export const translations: TranslationsTypes = {
   run: "Бег",
   cycling: "Велосипед",
   skiing: "Лыжи",
   jogging: "Ходьба",
-}
+};

@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getWorkouts, deleteWorkout } from "../../redux/actions/workoutActions";
+import { RootStore } from "../../redux/store";
+import { WorkoutState } from "../../redux/types";
 
 import TableWorkout from "../TableWorkout";
 import { AppWrapper } from "./styles";
@@ -8,7 +10,9 @@ import { AppWrapper } from "./styles";
 function App() {
   const dispatch = useDispatch();
 
-  const workouts = useSelector((state) => state.workouts);
+  const workouts = useSelector<RootStore, WorkoutState>(
+    (state) => state.workouts
+  );
 
   useEffect(() => {
     const fetchWorkouts = async () => {

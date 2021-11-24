@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 
 import { workoutTypes } from "./consts";
-import { Workout } from "../../redux/types";
+import { Workout, WorkoutTypes } from "../../redux/types";
 
 const { Option } = Select;
 
@@ -52,7 +52,7 @@ function WorkoutModal({ children, workout, action }: WorkoutModalProps) {
         .max(300)
         .required("Необходимо внести дистанцию в км"),
       date: Yup.date().required().nullable(),
-      type: Yup.string()
+      type: Yup.mixed()
         .oneOf(workoutTypes)
         .required("Необходимо указать тип активности"),
       comment: Yup.string(),
@@ -143,10 +143,10 @@ function WorkoutModal({ children, workout, action }: WorkoutModalProps) {
               }
               placeholder="Выберите тип тренировки"
             >
-              <Option value="run">Бег</Option>
-              <Option value="cycling">Велосипед</Option>
-              <Option value="skiing">Лыжи</Option>
-              <Option value="jogging">Ходьба</Option>
+              <Option value={WorkoutTypes.RUN}>Бег</Option>
+              <Option value={WorkoutTypes.CYCLING}>Велосипед</Option>
+              <Option value={WorkoutTypes.SKIING}>Лыжи</Option>
+              <Option value={WorkoutTypes.JOGGING}>Ходьба</Option>
             </Select>
           </Form.Item>
 

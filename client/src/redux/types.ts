@@ -1,9 +1,15 @@
-import { AxiosResponse } from "axios";
 import {
   GET_WORKOUTS_FAILURE,
   GET_WORKOUTS_REQUEST,
   GET_WORKOUTS_SUCCESS,
 } from "./consts";
+
+export enum WorkoutTypes {
+  RUN = "run",
+  CYCLING = "cycling",
+  SKIING = "skiing",
+  JOGGING = "jogging",
+}
 
 export interface Workout {
   comment: string;
@@ -11,7 +17,6 @@ export interface Workout {
   distance: number;
   id?: string;
   type: string;
-  //TODO: Добавить дополнительные типы
 }
 
 export interface WorkoutState {

@@ -21,11 +21,12 @@ export const getWorkouts = () => async (dispatch: Dispatch<WorkoutActions>) => {
 };
 
 export const deleteWorkout =
-  (id: number) => async (dispatch: Dispatch<WorkoutActions>) => {
+  (id: number) =>
+  async (dispatch: Dispatch<WorkoutActions>): Promise<any> => {
     try {
       await axios.delete(API + `workouts/${id}`);
 
-      return dispatch(getWorkouts());
+      return getWorkouts();
     } catch (error) {
       console.log(error.response);
     }
@@ -38,7 +39,7 @@ export const createWorkout =
 
       await axios.post(API + "workouts", workout);
 
-      return dispatch(getWorkouts());
+      return getWorkouts();
     } catch (error) {
       throw error.message;
     }
@@ -49,7 +50,7 @@ export const editWorkout =
     try {
       await axios.put(API + `workouts/${workout.id}`, workout);
 
-      return dispatch(getWorkouts());
+      return getWorkouts();
     } catch (error) {
       console.log(error.response);
     }

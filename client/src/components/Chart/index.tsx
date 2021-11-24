@@ -3,7 +3,7 @@ import { Bar } from "react-chartjs-2";
 import { ChartWrapper } from "./styles";
 
 type ChartProps = {
-  dataset: any
+  dataset: Map<number, number>;
 };
 
 function Chart({ dataset }: ChartProps) {
