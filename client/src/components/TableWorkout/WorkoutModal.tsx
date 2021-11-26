@@ -6,23 +6,21 @@ import Select from "antd/es/select";
 import message from "antd/es/message";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 
 import { workoutTypes } from "./consts";
 import { Workout, WorkoutTypes } from "../../redux/types";
+import { UseMutationResult } from "react-query";
 
 const { Option } = Select;
 
 type WorkoutModalProps = {
   children: React.ReactNode;
   workout?: Workout;
-  action: (workout: Workout) => void;
+  action: UseMutationResult;
 };
 
 function WorkoutModal({ children, workout, action }: WorkoutModalProps) {
-  const dispatch = useDispatch();
-
   const [isVisible, setIsVisible] = useState(false);
   const [postStatus, setPostStatus] = useState(false);
 
@@ -60,7 +58,7 @@ function WorkoutModal({ children, workout, action }: WorkoutModalProps) {
 
     onSubmit: async (values) => {
       try {
-        await dispatch(action(values));
+        await action.mutateAsync(values);
 
         message.success({ content: "Успешно!" });
         setPostStatus(false);

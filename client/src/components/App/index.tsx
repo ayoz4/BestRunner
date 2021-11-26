@@ -1,36 +1,27 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getWorkouts, deleteWorkout } from "../../redux/actions/workoutActions";
-import { RootStore } from "../../redux/store";
-import { WorkoutState } from "../../redux/types";
+import axios from "axios";
+import React from "react";
+import { QueryClient, useMutation, useQuery } from "react-query";
+import { API } from "../../redux/consts";
+import { Workout } from "../../redux/types";
 
 import TableWorkout from "../TableWorkout";
 import { AppWrapper } from "./styles";
 
+const fetchWorkouts = async () => {
+  return await (
+    await axios.get(API + "workouts")
+  ).data;
+};
+
 function App() {
-  const dispatch = useDispatch();
-
-  const workouts = useSelector<RootStore, WorkoutState>(
-    (state) => state.workouts
+  const { isLoading, data, error } = useQuery<Workout[]>(
+    "workouts",
+    fetchWorkouts
   );
-
-  useEffect(() => {
-    const fetchWorkouts = async () => {
-      try {
-        dispatch(getWorkouts());
-      } catch (error) {}
-    };
-
-    fetchWorkouts();
-  }, []);
-
-  const removeWorkout = (id: number) => {
-    dispatch(deleteWorkout(id));
-  };
 
   return (
     <AppWrapper>
-      <TableWorkout data={workouts} deleteRow={removeWorkout} />
+      <TableWorkout data={data} isLoading={isLoading} />
     </AppWrapper>
   );
 }

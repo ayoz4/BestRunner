@@ -6,8 +6,6 @@ import * as Moment from "moment";
 const moment = extendMoment(Moment);
 
 export const createWeeksFromDates = (dates: Workout[]) => {
-  console.log(dates);
-
   const sortedDates = dates.sort(
     (a: Workout, b: Workout) =>
       //@ts-ignore
@@ -16,8 +14,6 @@ export const createWeeksFromDates = (dates: Workout[]) => {
 
   const startDate = moment(sortedDates[0]?.date);
   const endDate = moment(sortedDates[sortedDates.length - 1]?.date);
-
-  console.log(startDate, endDate);
 
   const monthRange = moment.range(startDate, endDate);
 

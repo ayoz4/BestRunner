@@ -5,10 +5,15 @@ import App from "./components/App";
 import "antd/dist/antd.css";
 
 import store from "./redux/store";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 render(
   <Provider store={store}>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   </Provider>,
   document.getElementById("root")
 );

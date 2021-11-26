@@ -6,7 +6,6 @@ import * as Scroll from "react-scroll";
 
 import { translations } from "../utils/translations";
 import { createWeeksFromDates } from "../utils/chartData";
-import { createWorkout, editWorkout } from "../../redux/actions/workoutActions";
 import WorkoutModal from "./WorkoutModal";
 import { workoutTypes } from "./consts";
 import Chart from "../Chart";
@@ -16,21 +15,89 @@ import {
   TableWorkoutWrapper,
   Title,
 } from "./styles";
-import { Workout, WorkoutState } from "../../redux/types";
+import { Workout } from "../../redux/types";
+import { useMutation, useQueryClient } from "react-query";
+import axios from "axios";
+import { API } from "../../redux/consts";
 
 type TableWorkoutProps = {
-  data: WorkoutState;
-  deleteRow: (id: number | string) => void;
+  data: Workout[];
+  isLoading: boolean;
 };
 
-function TableWorkout({ data, deleteRow }: TableWorkoutProps) {
+function TableWorkout({ data = [], isLoading }: TableWorkoutProps) {
   const [dataset, setDataSet] = useState<Map<number, number>>(
-    createWeeksFromDates(data.data)
+    createWeeksFromDates(data)
   );
   const [isChartVisible, setChartVisible] = useState(false);
 
+  const queryClient = useQueryClient();
+  const createWorkout = useMutation(
+    (workout) => {
+      return axios.post(API + "workouts", workout);
+    },
+    {
+      onMutate: async (newWorkout) => {
+        await queryClient.cancelQueries("workouts");
+
+        const previousWorkouts = queryClient.getQueriesData("workouts");
+
+        queryClient.setQueryData("workouts", (old: Workout[]) => [
+          ...old,
+          newWorkout,
+        ]);
+
+        return {
+          previousWorkouts,
+        };
+      },
+      onError: (err, newWorkout, context: { previousWorkouts: any }) => {
+        queryClient.setQueriesData("workouts", context.previousWorkouts);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries("workouts");
+      },
+    }
+  );
+  const editWorkout = useMutation(
+    (workout: Workout) => {
+      return axios.put(API + `workouts/${workout.id}`, workout);
+    },
+    {
+      onSuccess: (editedWorkout) => {
+        queryClient.invalidateQueries("workouts");
+      },
+    }
+  );
+  const deleteWorkout = useMutation(
+    (id: number | string) => {
+      return axios.delete(API + `workouts/${id}`);
+    },
+    {
+      onMutate: async (deletedWorkout: any) => {
+        await queryClient.cancelQueries("workouts");
+
+        const previousWorkouts = queryClient.getQueryData("workouts");
+
+        queryClient.setQueryData("workouts", (old: any) => {
+          return old.filter((value: any) => value.id !== deletedWorkout.id);
+        });
+
+        return {
+          previousWorkouts,
+        };
+      },
+      onError: (err, deletedWorkout, context) => {
+        queryClient.setQueryData("workouts", context.previousWorkouts);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries("workouts");
+      },
+    }
+  );
+
   useEffect(() => {
-    setDataSet(createWeeksFromDates(data.data));
+    setDataSet(createWeeksFromDates(data));
   }, [data]);
 
   const columns = [
@@ -65,14 +132,14 @@ function TableWorkout({ data, deleteRow }: TableWorkoutProps) {
           <WorkoutModal workout={record} action={editWorkout}>
             <a>Редактировать</a>
           </WorkoutModal>
-          <a onClick={() => deleteRow(record.id)}>Удалить</a>
+          <a onClick={() => deleteWorkout.mutate(record.id)}>Удалить</a>
         </OperationsWrapper>
       ),
     },
   ];
 
   const openChart = () => {
-    if (data.data.length < 1) {
+    if (data.length < 1) {
       message.warn("Не достаточно данных для построения графика...");
       return;
     }
@@ -94,11 +161,11 @@ function TableWorkout({ data, deleteRow }: TableWorkoutProps) {
 
       <Table
         columns={columns}
-        dataSource={data.data}
+        dataSource={data}
         rowKey="id"
         pagination={false}
         bordered={true}
-        loading={data.isFetching}
+        loading={isLoading}
       />
 
       {isChartVisible && <Chart dataset={dataset} />}
