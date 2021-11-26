@@ -45,7 +45,7 @@ router.post("/", (req, res) => {
       fs.writeFile("./src/db/testDb.json", json, () => {});
     });
 
-    res.status(201).send("Created");
+    res.status(201).json(addedWorkout);
   } catch (error) {}
 });
 
@@ -88,7 +88,7 @@ router.put("/:id", (req, res) => {
       fs.writeFile("./src/db/testDb.json", JSON.stringify(array), () => {});
     });
 
-    res.status(200).send("Updated");
+    res.status(200).json(updatedWorkout);
   } catch (error) {
     // console.log(error);
     res.status(404).send(error);
