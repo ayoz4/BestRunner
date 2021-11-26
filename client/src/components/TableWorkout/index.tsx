@@ -16,9 +16,11 @@ import {
   Title,
 } from "./styles";
 import { Workout } from "../../redux/types";
-import { useMutation, useQueryClient } from "react-query";
-import axios from "axios";
-import { API } from "../../redux/consts";
+import {
+  useCreateWorkout,
+  useEditWorkout,
+  useDeleteWorkout,
+} from "./mutations";
 
 type TableWorkoutProps = {
   data: Workout[];
@@ -31,70 +33,7 @@ function TableWorkout({ data = [], isLoading }: TableWorkoutProps) {
   );
   const [isChartVisible, setChartVisible] = useState(false);
 
-  const queryClient = useQueryClient();
-  const createWorkout = useMutation(
-    (workout) => {
-      return axios.post(API + "workouts", workout);
-    },
-    {
-      onMutate: async (newWorkout) => {
-        await queryClient.cancelQueries("workouts");
-
-        const previousWorkouts = queryClient.getQueriesData("workouts");
-
-        queryClient.setQueryData("workouts", (old: Workout[]) => [
-          ...old,
-          newWorkout,
-        ]);
-
-        return {
-          previousWorkouts,
-        };
-      },
-      onError: (err, newWorkout, context: { previousWorkouts: any }) => {
-        queryClient.setQueriesData("workouts", context.previousWorkouts);
-      },
-      onSettled: () => {
-        queryClient.invalidateQueries("workouts");
-      },
-    }
-  );
-  const editWorkout = useMutation(
-    (workout: Workout) => {
-      return axios.put(API + `workouts/${workout.id}`, workout);
-    },
-    {
-      onSuccess: (editedWorkout) => {
-        queryClient.invalidateQueries("workouts");
-      },
-    }
-  );
-  const deleteWorkout = useMutation(
-    (id: number | string) => {
-      return axios.delete(API + `workouts/${id}`);
-    },
-    {
-      onMutate: async (deletedWorkout: any) => {
-        await queryClient.cancelQueries("workouts");
-
-        const previousWorkouts = queryClient.getQueryData("workouts");
-
-        queryClient.setQueryData("workouts", (old: any) => {
-          return old.filter((value: any) => value.id !== deletedWorkout.id);
-        });
-
-        return {
-          previousWorkouts,
-        };
-      },
-      onError: (err, deletedWorkout, context) => {
-        queryClient.setQueryData("workouts", context.previousWorkouts);
-      },
-      onSettled: () => {
-        queryClient.invalidateQueries("workouts");
-      },
-    }
-  );
+  const deleteWorkout = useDeleteWorkout();
 
   useEffect(() => {
     setDataSet(createWeeksFromDates(data));
@@ -129,7 +68,7 @@ function TableWorkout({ data = [], isLoading }: TableWorkoutProps) {
       title: "Операция",
       render: (_: string, record: Workout) => (
         <OperationsWrapper>
-          <WorkoutModal workout={record} action={editWorkout}>
+          <WorkoutModal workout={record} action={useEditWorkout}>
             <a>Редактировать</a>
           </WorkoutModal>
           <a onClick={() => deleteWorkout.mutate(record.id)}>Удалить</a>
@@ -153,7 +92,7 @@ function TableWorkout({ data = [], isLoading }: TableWorkoutProps) {
       <Title>BestRunner</Title>
 
       <ButtonWrapper>
-        <WorkoutModal action={createWorkout}>
+        <WorkoutModal action={useCreateWorkout}>
           <Button type="primary">Добавить тренировку</Button>
         </WorkoutModal>
         <Button onClick={openChart}>Открыть график</Button>

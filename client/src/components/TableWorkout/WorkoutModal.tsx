@@ -17,10 +17,12 @@ const { Option } = Select;
 type WorkoutModalProps = {
   children: React.ReactNode;
   workout?: Workout;
-  action: UseMutationResult;
+  action: () => UseMutationResult;
 };
 
 function WorkoutModal({ children, workout, action }: WorkoutModalProps) {
+  const actionHook = action ? action() : null;
+
   const [isVisible, setIsVisible] = useState(false);
   const [postStatus, setPostStatus] = useState(false);
 
@@ -58,7 +60,7 @@ function WorkoutModal({ children, workout, action }: WorkoutModalProps) {
 
     onSubmit: async (values) => {
       try {
-        await action.mutateAsync(values);
+        await actionHook.mutateAsync(values);
 
         message.success({ content: "Успешно!" });
         setPostStatus(false);
