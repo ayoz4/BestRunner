@@ -1,9 +1,9 @@
-import axios from "axios";
-import { useMutation, useQueryClient } from "react-query";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { useMutation, UseMutationResult, useQueryClient } from "react-query";
 import { API } from "../../redux/consts";
 import { Workout } from "../../redux/types";
 
-export const useCreateWorkout = () => {
+export const useCreateWorkout = (): UseMutationResult<AxiosResponse<Workout, unknown>, AxiosError<Workout, unknown>, any, unknown> => {
   const queryClient = useQueryClient();
 
   return useMutation(workout => axios.post(API + "workouts", workout), {
@@ -32,7 +32,7 @@ export const useCreateWorkout = () => {
   })
 }
 
-export const useEditWorkout = () => {
+export const useEditWorkout = (): UseMutationResult<AxiosResponse<Workout, unknown>, AxiosError<Workout, unknown>, any, unknown> => {
   const queryClient = useQueryClient();
 
   return useMutation((workout: any) => axios.put(API + `workouts/${workout.id}`, workout), {
@@ -42,7 +42,7 @@ export const useEditWorkout = () => {
   })
 }
 
-export const useDeleteWorkout = () => {
+export const useDeleteWorkout = (): UseMutationResult<AxiosResponse<Workout, unknown>, AxiosError<Workout, unknown>, any, unknown> => {
   const queryClient = useQueryClient();
 
   return useMutation((id: number) => axios.delete(API + `workouts/${id}`), {

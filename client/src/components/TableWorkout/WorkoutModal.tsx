@@ -7,6 +7,7 @@ import message from "antd/es/message";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import isEmpty from "lodash/isEmpty";
+import { AxiosError, AxiosResponse } from "axios";
 
 import { workoutTypes } from "./consts";
 import { Workout, WorkoutTypes } from "../../redux/types";
@@ -17,7 +18,7 @@ const { Option } = Select;
 type WorkoutModalProps = {
   children: React.ReactNode;
   workout?: Workout;
-  action: () => UseMutationResult;
+  action: () => UseMutationResult<AxiosResponse<Workout>, AxiosError<Workout>>;
 };
 
 function WorkoutModal({ children, workout, action }: WorkoutModalProps) {

@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React from "react";
-import { QueryClient, useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { API } from "../../redux/consts";
 import { Workout } from "../../redux/types";
 
@@ -14,7 +14,7 @@ const fetchWorkouts = async () => {
 };
 
 function App() {
-  const { isLoading, data, error } = useQuery<Workout[]>(
+  const { isLoading, data } = useQuery<Workout[], AxiosError<Workout[]>>(
     "workouts",
     fetchWorkouts
   );

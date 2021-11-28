@@ -31,7 +31,7 @@ function TableWorkout({ data = [], isLoading }: TableWorkoutProps) {
   const [dataset, setDataSet] = useState<Map<number, number>>(
     createWeeksFromDates(data)
   );
-  const [isChartVisible, setChartVisible] = useState(false);
+  const [isChartVisible, setChartVisible] = useState<boolean>(false);
 
   const deleteWorkout = useDeleteWorkout();
 
