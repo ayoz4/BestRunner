@@ -1,0 +1,72 @@
+{
+  "root": "apps/bestrunner",
+  "sourceRoot": "apps/bestrunner/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/web:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/bestrunner",
+        "index": "apps/bestrunner/src/index.html",
+        "baseHref": "/",
+        "main": "apps/bestrunner/src/main.tsx",
+        "polyfills": "apps/bestrunner/src/polyfills.ts",
+        "tsConfig": "apps/bestrunner/tsconfig.app.json",
+        "assets": [
+          "apps/bestrunner/src/favicon.ico",
+          "apps/bestrunner/src/assets"
+        ],
+        "styles": [],
+        "scripts": [],
+        "webpackConfig": "@nrwl/react/plugins/webpack"
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/bestrunner/src/environments/environment.ts",
+              "with": "apps/bestrunner/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/web:dev-server",
+      "options": {
+        "buildTarget": "bestrunner:build",
+        "hmr": true
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "bestrunner:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/bestrunner/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/bestrunner"],
+      "options": {
+        "jestConfig": "apps/bestrunner/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,28 @@
+{
+  "root": "apps/bestrunner-e2e",
+  "sourceRoot": "apps/bestrunner-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/bestrunner-e2e/cypress.json",
+        "devServerTarget": "bestrunner:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "bestrunner:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/bestrunner-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["bestrunner"]
+}
