@@ -2,6 +2,7 @@
   "version": 2,
   "projects": {
     "bestrunner": "apps/bestrunner",
-    "bestrunner-e2e": "apps/bestrunner-e2e"
+    "bestrunner-e2e": "apps/bestrunner-e2e",
+    "bestrunner-server": "apps/bestrunner-server"
   }
 }
