@@ -1,11 +1,19 @@
-import { StrictMode } from 'react';
-import * as ReactDOM from 'react-dom';
+import React from "react";
+import { render } from "react-dom";
+import { Provider } from "react-redux";
+import App from "./components/App";
+import "antd/dist/antd.css";
 
-import App from './app/app';
+import store from "./redux/store";
+import { QueryClient, QueryClientProvider } from "react-query";
 
-ReactDOM.render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-  document.getElementById('root')
+const queryClient = new QueryClient();
+
+render(
+  <Provider store={store}>
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
+  </Provider>,
+  document.getElementById("root")
 );
